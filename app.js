@@ -5,13 +5,21 @@ const hosanaClient = require('./api/hosanaClient');
 const app = express();
 const PORT = 3000;
 
-// Middleware para JSON
+// Middleware
 app.use(express.json());
-
-// Servir arquivos estáticos (HTML, etc.)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rota para check-in
+// Login automático ao iniciar o servidor
+(async () => {
+  try {
+    await hosanaClient.login('ux11015', 'Fsfx@2024'); // ← use seu usuário e senha
+    console.log('🚀 Login feito com sucesso!');
+  } catch (err) {
+    console.error('❌ Falha no login automático:', err.message);
+  }
+})();
+
+// Rota de check-in
 app.post('/check-in', async (req, res) => {
   const { agent_id } = req.body;
 
@@ -26,6 +34,7 @@ app.post('/check-in', async (req, res) => {
   }
 });
 
+// Inicialização do servidor
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`🌐 Servidor rodando em http://localhost:${PORT}`);
 });
